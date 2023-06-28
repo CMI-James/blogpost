@@ -1,0 +1,16 @@
+<%- include("partials/header")-%>
+<h1>Home</h1>
+<p><%=startingContent %></p>
+
+<% pushItems.forEach(function(pushItem){ %>
+<h1><%= pushItem.title %></h1>
+
+<p>
+  <%= pushItem.body.substring(0,99) + "..."%>
+  <a href="/posts/<%= pushItem.title %>">Read more</a>
+</p>
+<%});%> 
+
+
+
+<%-include("partials/footer")-%>
