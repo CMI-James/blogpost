@@ -24,6 +24,10 @@ mongoose.connect("mongodb://127.0.0.1:27017/blog", {
 const pushItemSchema = new mongoose.Schema({
   title: String,
   content: String,
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 });
 const PushItem = mongoose.model("PushItem", pushItemSchema);
 
@@ -71,6 +75,15 @@ app.get("/posts/:postId", async function (req, res) {
   PushItem.findOne({ _id: requestedPostId })
     .then(function (pushItem, err) {
       res.render("post", {
+        time: pushItem.createdAt.toLocaleString("en-UK", {
+          year: "numeric",
+          month: "numeric",
+          day: "numeric",
+          hour: "2-digit",
+          hour12: true,
+          minute: "2-digit",
+        }),
+        _id: pushItem._id,
         title: pushItem.title,
         content: pushItem.content,
       });
@@ -79,6 +92,41 @@ app.get("/posts/:postId", async function (req, res) {
       console.log(err);
     });
 });
+
+app.post("/delete/posts/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    await PushItem.findByIdAndRemove(id);
+    res.redirect("/");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Internal Server Error");
+  }
+});
+
+// app.post("/delete", function (req, res) {
+//   const deletedItemId = req.body.deleteBtn;
+
+//   PushItem.findByIdAndDelete(deletedItemId)
+//     .then(function () {
+//       console.log("Successfully deleted");
+//       res.redirect("/");
+//     })
+//     .catch(function (err) {
+//       console.log(err);
+//     });
+// });
+// app.post("/delete", function (req, res) {
+//   const deletedItemId = req.body.deleteBtn;
+
+//   if (deletedItemId != undefined) {
+//      PushItem.findByIdAndDelete(deletedItemId);
+//     res.redirect("/");
+//   } else {
+//     console.log(err);
+//     // res.redirect("/");
+//   }
+// });
 
 app.listen(3003, function () {
   console.log("Server started on port 3003");

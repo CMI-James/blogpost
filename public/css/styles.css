@@ -4,11 +4,35 @@ body {
   flex-direction: column;
   justify-content: space-between;
 }
+a:link {
+    text-decoration: none;
+}
+
+a:visited {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+a:active {
+    text-decoration: none;
+}
 
 .container-fluid {
   padding-top: 70px;
   padding-bottom: 70px;
 }
+.extra{
+    margin-top: 3em;
+    display: flex;
+    flex-direction: column;
+   
+    align-self: center;
+    gap: 1em;
+}
+
 .navbar {
   padding-top: 15px;
   padding-bottom: 15px;
@@ -19,7 +43,7 @@ body {
   letter-spacing: 5px;
 }
 .navbar-nav li a:hover {
-  color: #1abc9c !important;
+  color: #5089ca !important;
 }
 
 .footer-padding {

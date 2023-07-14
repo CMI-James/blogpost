@@ -3,14 +3,19 @@
 <p><%=startingContent %></p>
 
 <% pushItems.forEach(function(pushItem){ %>
-<h1><%= pushItem.title %></h1>
 
+<h1><%= pushItem.title %></h1>
 <p>
   <%= pushItem.content.substring(0,99) + "..."%>
   <a href="/posts/<%= pushItem._id %>">Read more</a>
 </p>
-<%});%> 
+<!-- <p>
+  <strong>Created at:</strong> <%= pushItem.createdAt.toLocaleString('en-UK',
+  {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit',hour12:
+  true, minute: '2-digit'}) %>
+</p>
+<form method="POST" action="/delete/posts/<%= pushItem._id %>">
+  <button class="btn btn-danger" type="submit">Delete</button>
+</form> -->
 
-
-
-<%-include("partials/footer")-%>
+<%});%> <%-include("partials/footer")-%>

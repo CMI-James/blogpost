@@ -1,5 +1,15 @@
 <%-include("partials/header") -%>
 <h1><%=title%></h1>
 <p><%=content %></p>
+<div class="extra">
+    <p>
+        <strong>Created at:</strong> <%= time %>
+      </p>
+    
+    <form method="POST" action="/delete/posts/<%= _id %>">
+      <button  class="btn btn-danger"  type="submit">Delete</button>
+    </form>  
+</div>
+
 
 <%-include("partials/footer") -%>
