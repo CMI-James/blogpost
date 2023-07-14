@@ -18,9 +18,13 @@ app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
-mongoose.connect("mongodb://127.0.0.1:27017/blog", {
-  useNewUrlParser: true,
-});
+mongoose.connect(
+  "mongodb+srv://chibuikemilonze:KSHd2liJJkSJ1F4k@web.u5tyci7.mongodb.net/blog",
+  {
+    useNewUrlParser: true,
+  }
+);
+
 const pushItemSchema = new mongoose.Schema({
   title: String,
   content: String,
@@ -70,7 +74,6 @@ app.post("/compose", function (req, res) {
 
 app.get("/posts/:postId", async function (req, res) {
   const requestedPostId = req.params.postId;
-  console.log(requestedPostId);
 
   PushItem.findOne({ _id: requestedPostId })
     .then(function (pushItem, err) {
