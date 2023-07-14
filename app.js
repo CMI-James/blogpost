@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const _ = require("lodash");
+const mongoose = require("mongoose");
 
 const homeStartingContent =
   "Lacus vel facilisis volutpat est velit egestas dui id ornare. Semper auctor neque vitae tempus quam. Sit amet cursus sit amet dictum sit amet justo. Viverra tellus in hac habitasse. Imperdiet proin fermentum leo vel orci porta. Donec ultrices tincidunt arcu non sodales neque sodales ut. Mattis molestie a iaculis at erat pellentesque adipiscing. Magnis dis parturient montes nascetur ridiculus mus mauris vitae ultricies. Adipiscing elit ut aliquam purus sit amet luctus venenatis lectus. Ultrices vitae auctor eu augue ut lectus arcu bibendum at. Odio euismod lacinia at quis risus sed vulputate odio ut. Cursus mattis molestie a iaculis at erat pellentesque adipiscing.";
@@ -11,17 +12,27 @@ const contactContent =
   "Scelerisque eleifend donec pretium vulputate sapien. Rhoncus urna neque viverra justo nec ultrices. Arcu dui vivamus arcu felis bibendum. Consectetur adipiscing elit duis tristique. Risus viverra adipiscing at in tellus integer feugiat. Sapien nec sagittis aliquam malesuada bibendum arcu vitae. Consequat interdum varius sit amet mattis. Iaculis nunc sed augue lacus. Interdum posuere lorem ipsum dolor sit amet consectetur adipiscing elit. Pulvinar elementum integer enim neque. Ultrices gravida dictum fusce ut placerat orci nulla. Mauris in aliquam sem fringilla ut morbi tincidunt. Tortor posuere ac ut consequat semper viverra nam libero.";
 
 const app = express();
-const pushItems = [];
+// const pushItems = [];
 
 app.set("view engine", "ejs");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static("public"));
+mongoose.connect("mongodb://127.0.0.1:27017/blog", {
+  useNewUrlParser: true,
+});
+const pushItemSchema = new mongoose.Schema({
+  title: String,
+  content: String,
+});
+const PushItem = mongoose.model("PushItem", pushItemSchema);
 
 app.get("/", function (req, res) {
-  res.render("Home", {
-    startingContent: homeStartingContent,
-    pushItems: pushItems,
+  PushItem.find().then((pushItems) => {
+    res.render("home", {
+      startingContent: homeStartingContent,
+      pushItems: pushItems,
+    });
   });
 });
 app.get("/about", function (req, res) {
@@ -35,26 +46,38 @@ app.get("/compose", function (req, res) {
   res.render("compose");
 });
 app.post("/compose", function (req, res) {
-  var postItem = {
+  const pushItem = new PushItem({
     title: req.body.postTitle,
-    body: req.body.postBody,
-  };
-
-  pushItems.push(postItem);
-  res.redirect("/");
-});
-app.get("/posts/:postName", function (req, res) {
-  const requestedTitle = _.lowerCase(req.params.postName);
-  pushItems.forEach(function (pushItem) {
-    const storedBody = pushItem.body;
-    const storedFile = _.lowerCase(pushItem.title);
-    if (storedFile === requestedTitle) {
-      res.render("post", {
-        postTitle: pushItem.title,
-        postBody: pushItem.body,
-      });
-    }
+    content: req.body.postBody,
   });
+  console.log(pushItem);
+  pushItem
+    .save()
+    .then(() => {
+      console.log("Post added to DB.");
+
+      res.redirect("/");
+    })
+
+    .catch((err) => {
+      res.status(400).send("Unable to save post to database.");
+    });
+});
+
+app.get("/posts/:postId", async function (req, res) {
+  const requestedPostId = req.params.postId;
+  console.log(requestedPostId);
+
+  PushItem.findOne({ _id: requestedPostId })
+    .then(function (pushItem, err) {
+      res.render("post", {
+        title: pushItem.title,
+        content: pushItem.content,
+      });
+    })
+    .catch(function (err) {
+      console.log(err);
+    });
 });
 
 app.listen(3003, function () {
