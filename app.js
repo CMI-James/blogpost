@@ -24,7 +24,9 @@ mongoose.connect(
     useNewUrlParser: true,
   }
 );
-
+// mongoose.connect("mongodb://127.0.0.1:27017/blog", {
+//   useNewUrlParser: true,
+// });
 const pushItemSchema = new mongoose.Schema({
   title: String,
   content: String,
@@ -74,6 +76,7 @@ app.post("/compose", function (req, res) {
 
 app.get("/posts/:postId", async function (req, res) {
   const requestedPostId = req.params.postId;
+  
 
   PushItem.findOne({ _id: requestedPostId })
     .then(function (pushItem, err) {
