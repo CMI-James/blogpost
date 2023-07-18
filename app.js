@@ -46,10 +46,10 @@ app.get("/", function (req, res) {
   });
 });
 app.get("/about", function (req, res) {
-  res.render("About", { abtContent: aboutContent });
+  res.render("about", { abtContent: aboutContent });
 });
 app.get("/contact", function (req, res) {
-  res.render("Contact", { contContent: contactContent });
+  res.render("contact", { contContent: contactContent });
 });
 
 app.get("/compose", function (req, res) {
