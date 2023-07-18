@@ -1,7 +1,7 @@
 <%- include("partials/header")-%>
 <h1>Home</h1>
 <p><%=startingContent %></p>
-
+<hr>
 <% pushItems.forEach(function(pushItem){ %>
 
 <h1><%= pushItem.title %></h1>
@@ -9,6 +9,7 @@
   <%= pushItem.content.substring(0,99) + "..."%>
   <a href="/posts/<%= pushItem._id %>">Read more</a>
 </p>
+<hr>
 <!-- <p>
   <strong>Created at:</strong> <%= pushItem.createdAt.toLocaleString('en-UK',
   {year: 'numeric', month: 'numeric', day: 'numeric', hour: '2-digit',hour12:
